@@ -16,7 +16,7 @@ class SignUp extends React.Component {
         docket: "",
         amazon_contract_no: "",
         is_admin_user: "",
-        is_master_user: "",
+        is_master_user: 0,
         is_individual_user: [],
       },
       errors: {},
