@@ -1,5 +1,7 @@
 import React from "react";
 import ReactFormInputValidation from "react-form-input-validation";
+import { FaEye } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -17,10 +19,14 @@ class SignUp extends React.Component {
         amazon_contract_no: "",
         is_admin_user: "",
         is_master_user: 0,
+        docketVal: "",
+        docketDrop: "",
         is_individual_user: [],
       },
       errors: {},
+      type: "password",
     };
+    this.showHide = this.showHide.bind(this);
     this.form = new ReactFormInputValidation(this);
     this.form.useRules({
       name: "required",
@@ -31,7 +37,8 @@ class SignUp extends React.Component {
       password: "required",
       legal_name: "required",
       dot: "required|numeric|digits_between:10,12",
-      docket: "required",
+      docketVal: "required",
+      docketDrop: "required",
       is_admin_user: "required",
       amazon_contract_no: "required",
       is_individual_user: "required|array",
@@ -41,10 +48,19 @@ class SignUp extends React.Component {
       if (this.state.fields.amazon_contract_no.value !== "") {
         this.setState({ is_master_user: 1 });
       }
+      this.setState({
+        docket: this.state.fields.docketDrop + this.state.fields.docketVal,
+      });
       console.log(this.state);
     };
   }
-
+  showHide(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.setState({
+      type: this.state.type === "password" ? "input" : "password",
+    });
+  }
   render() {
     const {
       first_name,
@@ -54,8 +70,8 @@ class SignUp extends React.Component {
       password,
       legal_name,
       dot,
-      docket,
-      is_admin_user,
+      docketVal,
+      docketDrop,
       amazon_contract_no,
     } = this.state.fields;
 
@@ -160,7 +176,41 @@ class SignUp extends React.Component {
           <div className="col-12">
             <div className="form-group">
               <label htmlFor="password">New Password</label>
-              <input
+              <div class="input-group mb-3">
+                <input
+                  type={this.state.type}
+                  name="password"
+                  className={
+                    this.state.errors.password
+                      ? "form-control is-invalid"
+                      : "form-control"
+                  }
+                  value={password}
+                  onChange={this.form.handleChangeEvent}
+                  aria-describedby="basic-addon2"
+                  style={{ borderRight: "none" }}
+                />
+                <div
+                  className={
+                    this.state.errors.password
+                      ? "input-group-append is-invalid"
+                      : "input-group-append"
+                  }
+                >
+                  <span
+                    className="input-group-text"
+                    id="basic-addon2"
+                    style={{ background: "#ffffff" }}
+                    onClick={this.showHide}
+                  >
+                    {this.state.type === "input" ? <FaEyeSlash /> : <FaEye />}
+                  </span>
+                </div>
+                <span className="invalid-feedback">
+                  {this.state.errors.password ? this.state.errors.password : ""}
+                </span>
+              </div>
+              {/* <input
                 type="password"
                 name="password"
                 className={
@@ -170,10 +220,7 @@ class SignUp extends React.Component {
                 }
                 value={password}
                 onChange={this.form.handleChangeEvent}
-              />
-              <span className="invalid-feedback">
-                {this.state.errors.password ? this.state.errors.password : ""}
-              </span>
+              /> */}
             </div>
           </div>
 
@@ -231,11 +278,11 @@ class SignUp extends React.Component {
               <div className="form-group">
                 <label htmlFor="docket">DOCKET</label>
                 <div className="input-group">
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <select
-                      name="docket"
+                      name="docketDrop"
                       className="form-control"
-                      value={docket}
+                      value={docketDrop}
                       onChange={this.form.handleChangeEvent}
                       style={{ background: "#9FC84C" }}
                       id="docket"
@@ -247,13 +294,13 @@ class SignUp extends React.Component {
                   </div>
                   <input
                     type="text"
-                    name="is_admin_user"
+                    name="docketVal"
                     className={
-                      this.state.errors.is_admin_user
+                      this.state.errors.docketVal
                         ? "form-control is-invalid"
                         : "form-control"
                     }
-                    value={is_admin_user}
+                    value={docketVal}
                     onChange={this.form.handleChangeEvent}
                     placeholder="XXXXXXXXXX"
                     aria-label="XXXXXXXXXX"
@@ -261,7 +308,9 @@ class SignUp extends React.Component {
                   />
                 </div>
                 <div className="dan">
-                  {this.state.errors.docket ? this.state.errors.docket : ""}
+                  {this.state.errors.docketVal
+                    ? this.state.errors.docketVal
+                    : ""}
                 </div>
               </div>
             </div>
@@ -287,7 +336,7 @@ class SignUp extends React.Component {
                 value="check"
                 onChange={this.form.handleChangeEvent}
               />
-              <label className="form-check-label" for="defaultCheck1">
+              <label className="form-check-label" htmlFor="defaultCheck1">
                 I would like information, tips and offers about Reliance
                 partners products and services
               </label>
@@ -303,13 +352,18 @@ class SignUp extends React.Component {
               Disclaimer: Please check your inbox for an email verifaction
             </p>
           </div>
-          <button
-            className="btn btn-lg btn-primary btn-block"
-            style={{ background: "#073C3E", border: "none" }}
-            type="submit"
+          <div
+            className="form-row"
+            style={{ marginRight: "10px", marginLeft: "10-x" }}
           >
-            SIGN UP
-          </button>
+            <button
+              className="btn btn-lg btn-primary btn-block"
+              style={{ background: "#073C3E", border: "none" }}
+              type="submit"
+            >
+              SIGN UP
+            </button>
+          </div>
         </form>
       </div>
     );
